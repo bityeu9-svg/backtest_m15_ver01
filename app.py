@@ -319,15 +319,12 @@ def run_market_scan():
             df['ema20'] = df['c'].ewm(span=20, adjust=False).mean()
             
             s = df.iloc[-2] # Nến tín hiệu vừa đóng
-            
-            # --- ĐÃ XÓA LOGIC LẤY prev_s VÀ SO SÁNH RANGE NẾN ---
 
             max_oc, min_oc = max(s['o'], s['c']), min(s['o'], s['c'])
             up_wick = ((s['h'] - max_oc) / max_oc) * 100
             lo_wick = ((min_oc - s['l']) / min_oc) * 100
             
             side = None
-            # Chỉ kiểm tra râu nến và vị trí so với EMA20 trên nến hiện tại
             if (s['c'] > s['o']) and (s['c'] > s['ema20']) and (lo_wick >= cfg['X']) and (up_wick <= cfg['Y']): 
                 side = "buy"
             elif (s['c'] < s['o']) and (s['c'] < s['ema20']) and (up_wick >= cfg['X']) and (lo_wick <= cfg['Y']): 
@@ -338,7 +335,11 @@ def run_market_scan():
                 # Kiểm tra bộ lọc Swing 5-5 (100 nến)
                 is_blocked, reason = is_near_resistance(df, side)
                 if is_blocked:
-                    print(f"   ⚠️ {sym}: Tín hiệu đẹp nhưng bị chặn bởi Swing. Lý do: {reason}")
+                    msg = f"⚠️ {sym}: Tín hiệu đẹp nhưng bị chặn bởi Swing. Lý do: {reason}"
+                    print(f"   {msg}")
+                    # GỬI CẢNH BÁO SLACK KHI BỊ CHẶN BỞI SWING
+                    if SLACK_WEBHOOK_URL:
+                        requests.post(SLACK_WEBHOOK_URL, json={"text": msg})
                     continue
 
                 # Vào lệnh
@@ -396,8 +397,8 @@ def update_settings(amt, lev, run):
     return f"{mode} | Vốn: {amt} USDT | Lever: x{lev} | Max lệnh: {MAX_OPEN_POSITIONS} | Swing: 5-5"
 
 with gr.Blocks(title="OKX Master Bot V6") as demo:
-    gr.Markdown("# 🤖 OKX Master Bot (50 Coins - Swing 5/5 - No Prev Candle Filter)")
-    gr.Markdown("Bot quét 50 cặp coin mỗi 5 phút. Vào lệnh dựa trên râu nến và EMA20, có kiểm tra Swing High/Low.")
+    gr.Markdown("# 🤖 OKX Master Bot (50 Coins - Swing 5/5 - Range Filter)")
+    gr.Markdown("Bot quét 50 cặp coin mỗi 5 phút. Vào lệnh dựa trên râu nến và EMA20, báo cáo cả trường hợp Swing chặn lệnh.")
     
     with gr.Row():
         num_amt = gr.Number(label="Số tiền vào mỗi lệnh (USDT)", value=10)
