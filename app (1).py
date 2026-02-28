@@ -34,35 +34,69 @@ TIMEFRAME = "5m"
 VIETNAM_TZ = ZoneInfo("Asia/Ho_Chi_Minh")
 LAST_PROCESSED_MINUTE = -1 
 
-# Cache thông số sàn
-MARKET_DATA_CACHE = {}
+# SETTING THEO YÊU CẦU
+LOOKBACK_CANDLES = 100 
+MAX_OPEN_POSITIONS = 6
+BUFFER_PERCENT = 0.15 
 
+# DANH SÁCH 50 CẶP COIN
 SYMBOL_CONFIGS = {
-    "XAG-USDT-SWAP": {"X": 0.5, "Y": 0.05, "Active": False},
     "BTC-USDT-SWAP": {"X": 0.15, "Y": 0.05, "Active": True},
-    "ETH-USDT-SWAP": {"X": 0.3, "Y": 0.05, "Active": True},
+    "ETH-USDT-SWAP": {"X": 0.2, "Y": 0.05, "Active": True},
     "SOL-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
     "BNB-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
     "XRP-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
-    "DOGE-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
     "ADA-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "DOGE-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
     "AVAX-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
-    "SHIB-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
     "DOT-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
     "LINK-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
-    "TRX-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "MATIC-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
     "UNI-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
-    "ATOM-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
-    "ICP-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
-    "ETC-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
-    "FIL-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "LTC-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
     "NEAR-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "ATOM-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "ETC-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "BCH-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "FIL-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
     "APT-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
-    "XAU-USDT-SWAP": {"X": 0.1, "Y": 0.05, "Active": False},
+    "OP-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "ARB-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "INJ-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "SUI-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "TIA-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "SEI-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "ORDI-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "RNDR-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "PEPE-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "SHIB-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "TRX-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "STX-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "ICP-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "IMX-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "KAS-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "GRT-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "AAVE-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "FTM-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "GALA-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "RUNE-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "DYDX-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "JUP-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "PYTH-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "WLD-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "BONK-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "FLOKI-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "LDO-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "FET-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "AGIX-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "OCEAN-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
+    "ARKM-USDT-SWAP": {"X": 0.35, "Y": 0.05, "Active": True},
 }
 
+MARKET_DATA_CACHE = {}
+
 # ==============================================================================
-# ========== HÀM API CORE ==========
+# ========== HÀM TIỆN ÍCH API ==========
 # ==============================================================================
 
 def okx_request(method, endpoint, body=None):
@@ -103,6 +137,12 @@ def get_market_rules(symbol):
         print(f"⚠️ Rules Error {symbol}: {e}")
     return None
 
+def count_open_positions():
+    res = okx_request("GET", "/api/v5/account/positions")
+    if res and res.get('code') == '0' and res.get('data'):
+        return len([p for p in res['data'] if p['pos'] != '0'])
+    return 0
+
 def check_existing_position(symbol):
     res = okx_request("GET", f"/api/v5/account/positions?instId={symbol}")
     if res and res.get('code') == '0' and res.get('data'):
@@ -111,7 +151,62 @@ def check_existing_position(symbol):
     return None
 
 # ==============================================================================
-# ========== LOGIC VÀO LỆNH & STOP LOSS MỚI ==========
+# ========== LOGIC SWING HIGH/LOW & KHÁNG CỰ HỖ TRỢ ==========
+# ==============================================================================
+
+def find_confirmed_swings(df, lookback=100):
+    """Tìm Swing High/Low với 5 nến trái và 5 nến phải trong cửa sổ Lookback"""
+    # Lấy dữ liệu lịch sử (không bao gồm nến tín hiệu và nến đang chạy)
+    # Cần tối thiểu lookback + 10 nến để quét
+    sub_df = df.iloc[-(lookback + 10):-1].reset_index(drop=True)
+    
+    swing_highs = []
+    swing_lows = []
+
+    # Quét từ index 5 đến len-5 để đảm bảo có đủ 5 nến 2 bên
+    for i in range(5, len(sub_df) - 5):
+        current_h = sub_df.iloc[i]['h']
+        current_l = sub_df.iloc[i]['l']
+        
+        # Check Swing High (Đỉnh)
+        is_high = True
+        for j in range(1, 6):
+            if current_h <= sub_df.iloc[i-j]['h'] or current_h <= sub_df.iloc[i+j]['h']:
+                is_high = False
+                break
+        if is_high: swing_highs.append(current_h)
+
+        # Check Swing Low (Đáy)
+        is_low = True
+        for j in range(1, 6):
+            if current_l >= sub_df.iloc[i-j]['l'] or current_l >= sub_df.iloc[i+j]['l']:
+                is_low = False
+                break
+        if is_low: swing_lows.append(current_l)
+            
+    return swing_highs, swing_lows
+
+def is_near_resistance(df, side):
+    """Kiểm tra xem giá đóng nến có đang đâm vào vùng Đỉnh/Đáy Swing 5-5 không"""
+    current_close = df.iloc[-2]['c']
+    swing_highs, swing_lows = find_confirmed_swings(df, LOOKBACK_CANDLES)
+    
+    buffer = current_close * (BUFFER_PERCENT / 100)
+    
+    if side == "buy" and swing_highs:
+        max_resistance = max(swing_highs)
+        if current_close >= (max_resistance - buffer):
+            return True, f"Gần đỉnh xác nhận (Swing High 5-5): {max_resistance}"
+            
+    elif side == "sell" and swing_lows:
+        min_support = min(swing_lows)
+        if current_close <= (min_support + buffer):
+            return True, f"Gần đáy xác nhận (Swing Low 5-5): {min_support}"
+            
+    return False, ""
+
+# ==============================================================================
+# ========== VÀO LỆNH & QUẢN LÝ LỆNH ==========
 # ==============================================================================
 
 def execute_smart_trade(symbol, side, entry_price, low, high):
@@ -123,38 +218,24 @@ def execute_smart_trade(symbol, side, entry_price, low, high):
         rules = get_market_rules(symbol)
         if not rules: return None, "0", 0, 0, "Không lấy được rules sàn"
 
-        ct_val = rules['ctVal']
-        lot_sz = rules['lotSz']
-        prec = rules['prec']
-        min_sz = rules['minSz']
-
-        # 1. Tính Volume (Sửa lỗi chính xác Volume USDT)
         total_notional_usdt = TRADE_AMOUNT_USDT * GLOBAL_LEVERAGE
-        raw_sz = total_notional_usdt / (entry_price * ct_val)
-        size = math.floor(raw_sz / lot_sz) * lot_sz
-        if size < min_sz: size = min_sz
+        raw_sz = total_notional_usdt / (entry_price * rules['ctVal'])
+        size = math.floor(raw_sz / rules['lotSz']) * rules['lotSz']
+        if size < rules['minSz']: size = rules['minSz']
         sz_str = format(size, 'f').rstrip('0').rstrip('.')
 
-        # 2. LOGIC STOP LOSS MỚI (±0.2%)
         pos_side = "long" if side == "buy" else "short"
         
+        # Stop Loss Offset 0.2%
         if side == "buy":
-            # SL = Low - (Low * 0.2%)
-            sl_raw = low * (1 - 0.002)
-            sl = round(sl_raw, prec)
+            sl = round(low * (1 - 0.002), rules['prec'])
         else:
-            # SL = High + (High * 0.2%)
-            sl_raw = high * (1 + 0.002)
-            sl = round(sl_raw, prec)
+            sl = round(high * (1 + 0.002), rules['prec'])
 
-        # 3. Tính TP (Dựa trên R:R 1:2 từ điểm SL mới)
         risk = abs(entry_price - sl)
-        if side == "buy":
-            tp = round(entry_price + (risk * 2), prec)
-        else:
-            tp = round(entry_price - (risk * 2), prec)
+        tp = round(entry_price + (risk * 2), rules['prec']) if side == "buy" else round(entry_price - (risk * 2), rules['prec'])
 
-        # 4. Thực thi lệnh
+        # Set Leverage
         okx_request("POST", "/api/v5/account/set-leverage", {
             "instId": symbol, "lever": str(GLOBAL_LEVERAGE), "mgnMode": "isolated", "posSide": pos_side
         })
@@ -172,10 +253,6 @@ def execute_smart_trade(symbol, side, entry_price, low, high):
     except Exception as e:
         return None, "0", 0, 0, str(e)
 
-# ==============================================================================
-# ========== HÀM QUÉT & SLACK ==========
-# ==============================================================================
-
 def manage_trailing_sl():
     try:
         pos_res = okx_request("GET", "/api/v5/account/positions")
@@ -183,7 +260,6 @@ def manage_trailing_sl():
         for pos in pos_res.get('data', []):
             if pos['pos'] == '0': continue
             sym, entry_px, pos_side = pos['instId'], float(pos['avgPx']), pos['posSide']
-            if sym not in SYMBOL_CONFIGS: continue
             
             c_res = requests.get(f"{OKX_BASE_URL}/api/v5/market/history-candles?instId={sym}&bar={TIMEFRAME}&limit=5").json()
             if not c_res.get('data'): continue
@@ -200,7 +276,9 @@ def manage_trailing_sl():
             risk = abs(entry_px - current_sl)
             rr1 = entry_px + risk if pos_side == 'long' else entry_px - risk
             rr2 = entry_px + risk*2 if pos_side == 'long' else entry_px - risk*2
-            prec = get_market_rules(sym)['prec']
+            rules = get_market_rules(sym)
+            if not rules: continue
+            prec = rules['prec']
 
             new_sl = None
             if pos_side == 'long':
@@ -212,42 +290,77 @@ def manage_trailing_sl():
 
             if new_sl:
                 okx_request("POST", "/api/v5/trade/amend-algos", {"instId": sym, "algoId": algo_id, "newSlTriggerPx": str(new_sl)})
-                print(f"🛡️ Trail SL {sym} -> {new_sl}")
     except: pass
 
+# ==============================================================================
+# ========== VÒNG LẶP CHÍNH (SCANNER) ==========
+# ==============================================================================
+
 def run_market_scan():
+    # 1. KIỂM TRA GIỚI HẠN 6 LỆNH
+    open_count = count_open_positions()
+    if open_count >= MAX_OPEN_POSITIONS:
+        print(f"🛑 Đã đạt giới hạn {MAX_OPEN_POSITIONS} vị thế. Dừng quét.")
+        return
+
     for sym, cfg in SYMBOL_CONFIGS.items():
         if not cfg.get("Active"): continue
         try:
-            url = f"{OKX_BASE_URL}/api/v5/market/history-candles?instId={sym}&bar={TIMEFRAME}&limit=50"
+            # Lấy 150 nến để đủ dữ liệu Swing 5-5 + Lookback 100
+            url = f"{OKX_BASE_URL}/api/v5/market/history-candles?instId={sym}&bar={TIMEFRAME}&limit=150"
             resp = requests.get(url, timeout=10).json()
             data = resp.get('data', [])
             if not data: continue
+            
             df = pd.DataFrame(data, columns=['ts', 'o', 'h', 'l', 'c', 'v', 'volCcy', 'volCcyQuote', 'confirm'])
             df[['o', 'h', 'l', 'c']] = df[['o', 'h', 'l', 'c']].astype(float)
             df = df.sort_values('ts').reset_index(drop=True)
             df['ema20'] = df['c'].ewm(span=20, adjust=False).mean()
             
-            s = df.iloc[-2]
+            s = df.iloc[-2]      # Nến tín hiệu vừa đóng
+            prev_s = df.iloc[-3]  # Nến trước đó
+            
+            # CHIỀU DÀI NẾN (Range)
+            current_range = s['h'] - s['l']
+            prev_range = prev_s['h'] - prev_s['l']
+            
             max_oc, min_oc = max(s['o'], s['c']), min(s['o'], s['c'])
             up_wick, lo_wick = ((s['h'] - max_oc) / max_oc) * 100, ((min_oc - s['l']) / min_oc) * 100
             
             side = None
-            if (s['c'] > s['o']) and (s['c'] > s['ema20']) and (lo_wick >= cfg['X']) and (up_wick <= cfg['Y']): side = "buy"
-            elif (s['c'] < s['o']) and (s['c'] < s['ema20']) and (up_wick >= cfg['X']) and (lo_wick <= cfg['Y']): side = "sell"
+            # Điều kiện: Biên độ nến hiện tại > nến trước
+            if current_range > prev_range:
+                if (s['c'] > s['o']) and (s['c'] > s['ema20']) and (lo_wick >= cfg['X']) and (up_wick <= cfg['Y']): 
+                    side = "buy"
+                elif (s['c'] < s['o']) and (s['c'] < s['ema20']) and (up_wick >= cfg['X']) and (lo_wick <= cfg['Y']): 
+                    side = "sell"
 
             if side:
+                # 2. KIỂM TRA KHÁNG CỰ HỖ TRỢ SWING 5-5
+                is_blocked, reason = is_near_resistance(df, side)
+                if is_blocked:
+                    print(f"⚠️ {sym}: {reason}")
+                    continue
+
                 res, sz, sl, tp, err = execute_smart_trade(sym, side, s['c'], s['l'], s['h'])
+                
                 total_vol = TRADE_AMOUNT_USDT * GLOBAL_LEVERAGE
-                
                 if res and res.get('code') == '0':
-                    msg = f"✅ OK | {side.upper()} {sym}\nVol: {total_vol} USDT | SL: {sl} | TP: {tp}"
+                    msg = f"✅ KHỚP LỆNH | {side.upper()} {sym}\nVol: {total_vol} USDT | SL: {sl} | TP: {tp}"
                 else:
-                    msg = f"❌ LỖI: {err if err else 'Fail'} | {side.upper()} {sym}\nVolume: {total_vol} USDT (Size: {sz})\nSL: {sl} | TP: {tp}"
+                    msg = f"❌ THẤT BẠI: {err if err else 'Fail'} | {side.upper()} {sym}\nSize: {sz} | SL: {sl} | TP: {tp}"
                 
-                if SLACK_WEBHOOK_URL: requests.post(SLACK_WEBHOOK_URL, json={"text": msg})
                 print(msg)
-        except: pass
+                if SLACK_WEBHOOK_URL:
+                    requests.post(SLACK_WEBHOOK_URL, json={"text": msg})
+                
+                # Sau khi vào 1 lệnh thành công, update lại số lượng để tránh vượt limit trong cùng 1 vòng lặp
+                open_count += 1
+                if open_count >= MAX_OPEN_POSITIONS:
+                    print("🛑 Đã đạt giới hạn tối đa sau lệnh này.")
+                    break
+        except Exception as e:
+            print(f"Lỗi scan {sym}: {e}")
 
 def main_loop():
     global LAST_PROCESSED_MINUTE
@@ -270,16 +383,19 @@ threading.Thread(target=main_loop, daemon=True).start()
 def update_settings(amt, lev, run):
     global TRADE_AMOUNT_USDT, GLOBAL_LEVERAGE, GLOBAL_RUNNING
     TRADE_AMOUNT_USDT, GLOBAL_LEVERAGE, GLOBAL_RUNNING = float(amt), int(lev), run
-    return f"{'🟢 CHẠY' if run else '🔴 DỪNG'} | Volume: {float(amt)*int(lev)}$ | SL: ±0.2% Offset"
+    status = "🟢 ĐANG CHẠY" if run else "🔴 ĐANG DỪNG"
+    return f"{status} | Tổng coin: 50 | Max lệnh: {MAX_OPEN_POSITIONS} | Lookback: 100 nến | Swing: 5-5"
 
-with gr.Blocks(title="OKX Bot RR V5") as demo:
-    gr.Markdown("# 🤖 OKX Bot (SL Offset 0.2% + Trailing SL)")
+with gr.Blocks(title="OKX Pro Bot V6") as demo:
+    gr.Markdown("# 🤖 OKX Pro Bot (50 Coins + Swing 5-5 + Range Filter)")
     with gr.Row():
-        num_amt = gr.Number(label="Vốn (USDT)", value=10)
+        num_amt = gr.Number(label="Vốn mỗi lệnh (USDT)", value=10)
         num_lev = gr.Number(label="Đòn bẩy", value=25)
         chk_run = gr.Checkbox(label="Kích hoạt Bot")
-    btn = gr.Button("LƯU & CHẠY", variant="primary")
-    out = gr.Textbox(label="Trạng thái", interactive=False)
+    
+    btn = gr.Button("LƯU & KÍCH HOẠT", variant="primary")
+    out = gr.Textbox(label="Trạng thái hệ thống", interactive=False)
+    
     btn.click(update_settings, [num_amt, num_lev, chk_run], out)
 
 if __name__ == "__main__":
