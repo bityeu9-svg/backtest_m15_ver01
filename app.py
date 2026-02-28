@@ -96,12 +96,11 @@ SYMBOL_CONFIGS = {
 MARKET_DATA_CACHE = {}
 
 # ==============================================================================
-# ========== 2. HÀM TIỆN ÍCH API (SỬA LỖI UTC) ==========
+# ========== 2. HÀM TIỆN ÍCH API ==========
 # ==============================================================================
 
 def okx_request(method, endpoint, body=None):
     try:
-        # Sử dụng UTC đúng chuẩn để tránh cảnh báo Deprecation
         ts = datetime.now(UTC).isoformat(timespec='milliseconds').replace('+00:00', 'Z')
         body_str = json.dumps(body) if body else ""
         message = ts + method + endpoint + body_str
@@ -136,14 +135,12 @@ def get_market_rules(symbol):
             }
             MARKET_DATA_CACHE[symbol] = data
             return data
-    except Exception as e:
-        print(f"⚠️ Rules Error {symbol}: {e}")
-    return None
+    except Exception:
+        return None
 
 def count_open_positions():
     res = okx_request("GET", "/api/v5/account/positions")
     if res and res.get('code') == '0' and res.get('data'):
-        # Chỉ đếm vị thế có kích thước khác 0
         return len([p for p in res['data'] if p['pos'] != '0'])
     return 0
 
@@ -159,17 +156,11 @@ def check_existing_position(symbol):
 # ==============================================================================
 
 def find_confirmed_swings(df, lookback=100):
-    """
-    Tìm các điểm Swing High/Low xác nhận bởi 5 nến trái và 5 nến phải.
-    Sử dụng dữ liệu lịch sử lùi lại từ nến vừa đóng.
-    """
-    # Lấy dữ liệu Lookback cộng thêm 10 nến đệm để kiểm tra 5 nến trái/phải
     sub_df = df.iloc[-(lookback + 11):-1].reset_index(drop=True)
     
     swing_highs = []
     swing_lows = []
 
-    # Bắt đầu quét từ index 5 đến len-5
     for i in range(5, len(sub_df) - 5):
         current_h = sub_df.iloc[i]['h']
         current_l = sub_df.iloc[i]['l']
@@ -217,7 +208,6 @@ def execute_smart_trade(symbol, side, entry_price, low, high):
         rules = get_market_rules(symbol)
         if not rules: return None, "0", 0, 0, "Lỗi rules"
 
-        # Tính Size dựa trên vốn và đòn bẩy
         total_vol = TRADE_AMOUNT_USDT * GLOBAL_LEVERAGE
         raw_sz = total_vol / (entry_price * rules['ctVal'])
         size = math.floor(raw_sz / rules['lotSz']) * rules['lotSz']
@@ -296,7 +286,8 @@ def manage_trailing_sl():
                     "instId": sym, "algoId": algo_id, "newSlTriggerPx": str(new_sl)
                 })
                 print(f"🛡️ {sym} Trail SL -> {new_sl}")
-    except: pass
+    except Exception:
+        pass
 
 # ==============================================================================
 # ========== 5. QUÉT THỊ TRƯỜNG & LOG HỆ THỐNG ==========
@@ -327,17 +318,16 @@ def run_market_scan():
             df = df.sort_values('ts').reset_index(drop=True)
             df['ema20'] = df['c'].ewm(span=20, adjust=False).mean()
             
-            s, prev_s = df.iloc[-2], df.iloc[-3]
+            s = df.iloc[-2] # Nến tín hiệu vừa đóng
             
-            # Kiểm tra biên độ nến tín hiệu > nến trước
-            if (s['h'] - s['l']) <= (prev_s['h'] - prev_s['l']):
-                continue
+            # --- ĐÃ XÓA LOGIC LẤY prev_s VÀ SO SÁNH RANGE NẾN ---
 
             max_oc, min_oc = max(s['o'], s['c']), min(s['o'], s['c'])
             up_wick = ((s['h'] - max_oc) / max_oc) * 100
             lo_wick = ((min_oc - s['l']) / min_oc) * 100
             
             side = None
+            # Chỉ kiểm tra râu nến và vị trí so với EMA20 trên nến hiện tại
             if (s['c'] > s['o']) and (s['c'] > s['ema20']) and (lo_wick >= cfg['X']) and (up_wick <= cfg['Y']): 
                 side = "buy"
             elif (s['c'] < s['o']) and (s['c'] < s['ema20']) and (up_wick >= cfg['X']) and (lo_wick <= cfg['Y']): 
@@ -348,7 +338,7 @@ def run_market_scan():
                 # Kiểm tra bộ lọc Swing 5-5 (100 nến)
                 is_blocked, reason = is_near_resistance(df, side)
                 if is_blocked:
-                    print(f"   ⚠️ {sym}: Bỏ qua tín hiệu. Lý do: {reason}")
+                    print(f"   ⚠️ {sym}: Tín hiệu đẹp nhưng bị chặn bởi Swing. Lý do: {reason}")
                     continue
 
                 # Vào lệnh
@@ -403,11 +393,11 @@ def update_settings(amt, lev, run):
     GLOBAL_RUNNING = run
     
     mode = "🟢 ĐANG CHẠY" if run else "🔴 ĐANG DỪNG"
-    return f"{mode} | Vốn: {amt} USDT | Lever: x{lev} | Max lệnh: {MAX_OPEN_POSITIONS} | Lookback: {LOOKBACK_CANDLES} nến (Swing 5-5)"
+    return f"{mode} | Vốn: {amt} USDT | Lever: x{lev} | Max lệnh: {MAX_OPEN_POSITIONS} | Swing: 5-5"
 
 with gr.Blocks(title="OKX Master Bot V6") as demo:
-    gr.Markdown("# 🤖 OKX Master Bot (50 Coins - Swing 5/5 - Range Filter)")
-    gr.Markdown("Bot sẽ quét 50 cặp coin mỗi 5 phút. Chỉ vào lệnh khi nến tín hiệu bứt phá (Range > Prev Range) và không nằm ở đỉnh/đáy 100 nến.")
+    gr.Markdown("# 🤖 OKX Master Bot (50 Coins - Swing 5/5 - No Prev Candle Filter)")
+    gr.Markdown("Bot quét 50 cặp coin mỗi 5 phút. Vào lệnh dựa trên râu nến và EMA20, có kiểm tra Swing High/Low.")
     
     with gr.Row():
         num_amt = gr.Number(label="Số tiền vào mỗi lệnh (USDT)", value=10)
